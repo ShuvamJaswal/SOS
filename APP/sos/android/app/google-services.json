@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1060541616106",
+    "project_id": "sos-app-b131f",
+    "storage_bucket": "sos-app-b131f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060541616106:android:67a98eababaa6317eeec93",
+        "android_client_info": {
+          "package_name": "com.thebeastapplications.sos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060541616106-m984t37226i2k598681sqdl3q8tlk5m9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEo0_xQmYhVbbAjwxRkFbL9XtoDvrHn5c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060541616106-m984t37226i2k598681sqdl3q8tlk5m9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1060541616106-595h1ab8grln8dms0juadfna55augvv7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.thebeastapplications.sos.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
