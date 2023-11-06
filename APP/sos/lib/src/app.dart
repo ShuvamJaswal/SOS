@@ -51,32 +51,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final goRouter = ref.watch(goRouterProvider);
-    // FirebaseMessaging.instance
-    //     .getInitialMessage()
-    //     .then((RemoteMessage? message) {
-    //   if (message != null) {
-    //     Map data = message.data;
 
-    //     String apiToken = '6128047392:AAHH91LV7LJfUTEzLntjQKj1FRjnEGSm8xw';
-    //     String chatID = '-1001829931200';
-    //     String apiURL = 'https://api.telegram.org/bot${apiToken}/sendMessage';
-    //     Map json_data = {'chat_id': chatID, 'text': message};
-
-    //     var res = http.post(Uri.parse(apiURL), body: json_data);
-
-    //     goRouter.push(
-    //         '/chat?requestId=${data['requestId']}&userId=${data['userId']}');
-    //     // add your condition if any
-    //     // Navigator.of(context).pushNamedAndRemoveUntil("/notifications", (route) => route.settings.name == "/notifications" ? false : true);
-    //   }
-    // });
-    // FirebaseMessaging.onMessageOpenedApp.listen((event) {
-    //   print(event);
-    //   Map data = event.data;
-    //   goRouter.push(
-    //       '/chat?requestId=${data['requestId']}&userId=${data['userId']}');
-    //   print(event);
-    // });
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(useMaterial3: true),
