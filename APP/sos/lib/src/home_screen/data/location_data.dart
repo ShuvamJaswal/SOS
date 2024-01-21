@@ -23,10 +23,9 @@ class LocationData {
     String user = FirebaseAuth.instance.currentUser!.uid;
     final firestore = ref.watch(firestoreInstanceProvider);
 
-    firestore
-        .collection('users')
-        .doc(user)
-        .set({'position': geoFirePoint.data, 'message_token': token});
+    firestore.collection('users').doc(user).set(
+        {'position': geoFirePoint.data, 'message_token': token},
+        SetOptions(merge: true));
   }
 
   Future<Position> getCurrentLocation() async {
@@ -40,7 +39,7 @@ class LocationData {
       await Future.delayed(Duration(seconds: 1));
       timeOut += 1;
     }
-    Position posi = await ref.watch(liveLocationServiceProvider).s.value;
+    Position posi = await ref.watch(liveLocationServiceProvider).s?.value;
     return posi;
   }
 

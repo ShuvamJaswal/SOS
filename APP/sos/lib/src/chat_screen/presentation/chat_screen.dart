@@ -29,6 +29,7 @@ class ChatS extends ConsumerStatefulWidget {
 class _ChatSState extends ConsumerState<ChatS> {
   @override
   void initState() {
+    print("initstate chat");
     super.initState();
     final firestore = ref.read(firestoreInstanceProvider);
     final user = ref.read(userIdProvider);
@@ -41,11 +42,12 @@ class _ChatSState extends ConsumerState<ChatS> {
       'time': DateTime.now().millisecondsSinceEpoch.toString(),
       'userId': widget.userId,
       'requestId': widget.requestId.toString(),
-    });
+    }, SetOptions(merge: true));
   }
 
   @override
   Widget build(BuildContext context) {
+    print("initstate chat");
     final stream = ref.watch(requestDataProvider(
         requestId: widget.requestId, userId: widget.userId));
     return Scaffold(
@@ -71,6 +73,7 @@ class RequestAppBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return stream.when(
         data: (data) {
+          print(data);
           return AppBar(
             titleSpacing: 0,
             toolbarHeight: 100,
@@ -88,7 +91,7 @@ class RequestAppBar extends ConsumerWidget implements PreferredSizeWidget {
                       'time': DateTime.now().millisecondsSinceEpoch.toString(),
                       'userId': userId,
                       'requestId': requestId.toString(),
-                    });
+                    }, SetOptions(merge: true));
                   },
                   icon: const Icon(Icons.save))
             ],
@@ -216,11 +219,14 @@ class RequestBottomBar extends ConsumerWidget {
                 .doc(userId)
                 .collection('requests')
                 .doc(requestId)
-                .update({
-              'location': position.toString(),
-              'google_url':
-                  'https://www.google.com/maps/place/${position.latitude},${position.longitude}'
-            });
+                .set(
+              {
+                'location': position.toString(),
+                'google_url':
+                    'https://www.google.com/maps/place/${position.latitude},${position.longitude}'
+              },
+              SetOptions(merge: true),
+            );
           },
         ),
         Builder(

@@ -17,26 +17,28 @@ class OnboardingRepository {
   final MyProfile profile;
   final FirebaseFirestore firestore;
   OnboardingRepository({required this.profile, required this.firestore});
-  Future<UserCredential> signInAnonymously() async {
-    UserCredential user = await profile.signInAnonymously();
-    if (user.user!.displayName.toString() == 'null' ||
-        user.user!.displayName.toString() == '') {
-      await firestore
-          .collection('users')
-          .doc(user.user!.uid)
-          .set({'user': 'user' + user.user!.uid.toString().substring(0, 4)});
-      user.user!.updateDisplayName(
-          'user${user.user!.uid.toString().substring(0, 4)}');
+  Future<User> signInAnonymously() async {
+    User user = await profile.signInAnonymously();
+    if (user.displayName.toString() == 'null' ||
+        user.displayName.toString() == '') {
+      await firestore.collection('users').doc(user.uid).set(
+          {'user': 'user' + user.uid.toString().substring(0, 4)},
+          SetOptions(merge: true));
+      user.updateDisplayName('user${user.uid.toString().substring(0, 4)}');
     }
-    FirebaseCrashlytics.instance.setUserIdentifier(user.user!.uid);
+    FirebaseCrashlytics.instance.setUserIdentifier(user.uid);
     return user;
   }
 
   Future<bool> onBoardingComplete() async {
-    return (await Geolocator.isLocationServiceEnabled() &&
+    await signInAnonymously();
+    print("isOnboardingComplete ${FirebaseAuth.instance.currentUser != null}");
+    print("isOnboardingComplete ${Geolocator.isLocationServiceEnabled()}");
+
+    return (FirebaseAuth.instance.currentUser != null &&
+        await Geolocator.isLocationServiceEnabled() &&
         (await Geolocator.checkPermission() == LocationPermission.whileInUse ||
-            await Geolocator.checkPermission() == LocationPermission.always) &&
-        FirebaseAuth.instance.currentUser != null);
+            await Geolocator.checkPermission() == LocationPermission.always));
   }
 }
 

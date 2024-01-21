@@ -1,13 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sos/src/onboarding/data/onboarding_provider.dart';
 part 'my_profile.g.dart';
 
 class MyProfile {
-  Future<UserCredential> signInAnonymously() async {
+  Future<User> signInAnonymously() async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    final UserCredential userCredential = await auth.signInAnonymously();
-    return userCredential;
+    if (FirebaseAuth.instance.currentUser == null) {
+      final UserCredential userCredential = await auth.signInAnonymously();
+      return userCredential.user!;
+    } else {
+      return FirebaseAuth.instance.currentUser!;
+    }
   }
 }
 
@@ -26,7 +31,7 @@ Stream username(UsernameRef ref) {
 }
 
 final userIdProvider = Provider<User>((ref) {
-  FirebaseAuth.instance.signInAnonymously();
+  ref.watch(onboardingrepositoryProvider).signInAnonymously();
   return FirebaseAuth.instance.currentUser!;
 });
 @Riverpod(keepAlive: true)

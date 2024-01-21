@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -65,7 +66,7 @@ class CallHelpController extends _$CallHelpController {
       'description': '',
       'google_url':
           'https://www.google.com/maps/place/${Pos.latitude},${Pos.longitude}'
-    }).then((e) {
+    }, SetOptions(merge: true)).then((e) {
       debugPrint('added successfully');
     });
     return time;
@@ -95,7 +96,6 @@ class CallHelpController extends _$CallHelpController {
       ref.read(statusUpdateProvider.notifier).change(StatusType.error);
       print(e);
       FirebaseCrashlytics.instance.log(e.toString());
-      FirebaseAnalytics.instance.logEvent(name: "testUwU");
       return '';
     }
   }

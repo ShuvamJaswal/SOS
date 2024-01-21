@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geoflutterfire2/geoflutterfire2.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sos/src/auth/data/my_profile.dart';
 import 'package:sos/src/home_screen/presentation/widgets/help_button.dart';
@@ -43,7 +46,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       if (message != null) {
         Map data = message.data;
         if (goRouter.location.startsWith('/chat')) {
-          context.replace(
+          context.pushReplacement(
               '/chat?requestId=${data['requestId']}&userId=${data['userId']}');
         } else {
           context.push(
@@ -54,7 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     FirebaseMessaging.onMessageOpenedApp.listen((event) async {
       Map data = event.data;
       if (goRouter.location.startsWith('/chat')) {
-        context.replace(
+        context.pushReplacement(
             '/chat?requestId=${data['requestId']}&userId=${data['userId']}');
       } else {
         context.push(
@@ -77,7 +80,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       onTap: () async {
                         closeOverlay();
                         if (goRouter.location.startsWith('/chat')) {
-                          context.replace(
+                          context.pushReplacement(
                               '/chat?requestId=${data['requestId']}&userId=${data['userId']}');
                         } else {
                           context.push(
@@ -121,11 +124,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   void didChangeDependencies() {
     super.didChangeDependencies();
     initializeMessages();
+    initializeLocation();
+  }
+
+  void initializeLocation() async {
+    print("Call InitializeLocation");
+    Position p = await Geolocator.getCurrentPosition();
+    print(p);
+    GeoFirePoint geoFirePoint =
+        GeoFlutterFire().point(latitude: p.latitude, longitude: p.longitude);
+    String user = FirebaseAuth.instance.currentUser!.uid;
+    String? token = await FirebaseMessaging.instance.getToken();
+    FirebaseFirestore.instance.collection('users').doc(user).set(
+      {'position': geoFirePoint.data, 'message_token': token},
+      SetOptions(merge: true),
+    );
   }
 
   @override
   void initState() {
     super.initState();
+    print(
+        "isOnboardingComplete HomeScreen ${FirebaseAuth.instance.currentUser != null}");
     tabController = TabController(length: 2, vsync: this);
   }
 

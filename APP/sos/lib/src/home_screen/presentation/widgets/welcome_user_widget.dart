@@ -48,7 +48,10 @@ class WelcomeUserWidget extends StatelessWidget {
                         FirebaseFirestore.instance
                             .collection('users')
                             .doc(user!.uid)
-                            .update({'user': controllerName.text});
+                            .set(
+                          {'user': controllerName.text},
+                          SetOptions(merge: true),
+                        );
 
                         user.updateDisplayName(controllerName.text);
 

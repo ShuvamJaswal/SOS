@@ -59,9 +59,9 @@ GoRouter goRouter(Ref ref) {
         ),
       ],
       redirect: (context, state) async {
-        
         final isOnboardingComplete =
             await ref.watch(onboardingrepositoryProvider).onBoardingComplete();
+        print("isOnboardingComplete $isOnboardingComplete");
         if (!isOnboardingComplete) {
           if (state.location != '/onboarding') {
             return state.namedLocation(AppRoute.onBoarding.name);

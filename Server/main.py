@@ -26,16 +26,17 @@ def root():
 @app.route('/send',methods=['POST'])
 def send():
     # print(request.data)
-    print(json.loads(request.data)['list']) 
-
-    a=messaging.MulticastMessage(
-         json.loads(request.data)['list'],     
-android=messaging.AndroidConfig(priority='high',
-                       notification=      messaging.AndroidNotification   (channel_id='high_importance_channel',title='HELP',body='Open Chat',sound="default",priority= "high")),
+    print(json.loads(request.data)['list'])
+    a=messaging.MulticastMessage(json.loads(request.data)['list'],notification=messaging.Notification(
+   title='Emergency',
+   body='Someone needs your help.'
+  ),
+android=messaging.AndroidConfig(priority='high'),
                            data={ 'requestId': json.loads(request.data)['requestId'],'userId': json.loads(request.data)['userId']})
     s=messaging.send_multicast(a)
     for i in s.responses:
         print(i.success)
-    return str(f'Sucess: {s.success_count} {s.failure_count}')
-
-app.run(debug=True)
+    return str(s)
+# messaging.BatchResponse.responses
+# if __name__ == '__main__':
+#     app.run()
